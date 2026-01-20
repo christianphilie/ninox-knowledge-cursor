@@ -1,76 +1,76 @@
-# Ninox Knowledge Base
+# Ninox Knowledge Base für Cursor
 
-Diese Knowledge Base dient als strukturierte Wissenssammlung für Ninox-Scripting, um sicherzustellen, dass alle generierten Skripte dokumentationskonform sind und nur existierende Funktionen verwenden.
+> **Wichtig**: Diese Knowledge Base ist speziell für **Cursor** entwickelt, um sicherzustellen, dass generierte Ninox-Skripte dokumentationskonform sind und nur existierende Funktionen verwenden.
 
-## Struktur
+## 📌 Was ist Cursor?
 
-### 📚 Dokumentation (`docs/`)
-- `scripting/` - Scripting-Dokumentation (Funktionen, Syntax, Performance)
-- `database/` - Datenbank-Konzepte (Tabellen, Beziehungen, Felder)
-- `automation/` - Automatisierung (Workflows, Funktionen, API)
+**[Cursor](https://cursor.sh)** ist ein AI-gestützter Code-Editor, der mit LLMs wie Composer 1 arbeitet. Cursor lädt automatisch Project Rules aus `.cursor/rules/*.mdc` Dateien, um konsistente und dokumentationskonforme Code-Generierung zu gewährleisten.
 
-### 📝 Beispiele (`examples/`)
-- `good-practices/` - Korrekte, dokumentationskonforme Skripte
-- `patterns/` - Häufige Muster und Lösungen
-- `undocumented-examples/` - Beispiele mit undokumentierten aber funktionierenden Features
+## 🎯 Zweck
 
-### 📋 Regeln (`rules/`)
-- `strict-rules.md` - **KRITISCH**: Regeln zur Dokumentationskonformität
-- `function-whitelist.md` - Liste aller dokumentierten Ninox-Funktionen
-- `undocumented-features.md` - Undokumentiert aber funktionierend
-- `forbidden-patterns.md` - Häufige LLM-Fehler: erfundene Funktionen/Syntax
-- `style-guide.md` - Coding-Standards und Best Practices
-- `performance-rules.md` - Performance-Optimierungen
-- `common-mistakes.md` - Häufige Fehler und wie man sie vermeidet
+Diese Knowledge Base hilft Cursor (z.B. mit Composer 1) dabei, korrekte Ninox-Skripte zu generieren:
 
-### ⚙️ Konfiguration (`ninox-config/`)
-- `system-prompt.md` - System-Prompt für Ninox-Anfragen
-- `references.md` - Liste wichtiger Dokumentations-URLs
+- ✅ Nur dokumentierte Ninox-Funktionen verwenden
+- ✅ Keine erfundenen Funktionen aus anderen Programmiersprachen übernehmen
+- ✅ Undokumentierte aber funktionierende Features korrekt kennzeichnen
+- ✅ Performance-optimierte Skripte generieren
 
-## Wichtigste Regeln
+**Warum ist das wichtig?** LLMs neigen dazu, Funktionen zu erfinden oder aus anderen Sprachen zu übernehmen. Diese Knowledge Base verhindert das durch strikte Regeln und eine Function-Whitelist.
+
+## 🚀 Schnellstart
+
+### Voraussetzungen
+
+- **[Cursor](https://cursor.sh)** installiert und eingerichtet
+
+### Schritte
+
+1. **Ordner in Cursor öffnen**: Öffne diesen Ordner in Cursor
+2. **Automatisch aktiv**: `.cursor/rules/*.mdc` werden automatisch geladen
+3. **Skripte erstellen**: Erstelle Ninox-Skripte im `workspace/` Ordner
+4. **Fertig**: Stelle Fragen zu Ninox - Cursor nutzt automatisch die Knowledge Base
+
+## 📁 Struktur
+
+- `docs/` - Dokumentation (Scripting, Datenbanken, Automatisierung)
+- `examples/` - Beispiele und Patterns
+- `rules/` - Regeln (Function-Whitelist, Forbidden Patterns, Performance)
+- `.cursor/rules/*.mdc` - **Cursor Project Rules** (automatisch geladen)
+- `workspace/` - Hier erstellst du deine aktuellen Ninox-Skripte
+
+## 📋 Wichtigste Regeln
 
 ### Drei Kategorien von Funktionen:
 
-1. **Dokumentierte Funktionen** - Bevorzugt verwenden, Standard-Ansatz
-2. **Undokumentiert aber funktionierend** - Kann verwendet werden, aber mit entsprechender Kennzeichnung/Warnung
-3. **Nicht existierende Funktionen** - ABSOLUT VERBOTEN: Nichts erfinden oder aus anderen Programmiersprachen übernehmen
+1. **✅ Dokumentiert** - Bevorzugt verwenden
+2. **⚠️ Undokumentiert aber funktionierend** - Mit Kennzeichnung verwenden
+3. **❌ Nicht existierend** - ABSOLUT VERBOTEN
 
-### Prinzip
+**Prinzip**: Bevorzuge dokumentierte Lösungen, aber wenn etwas funktioniert (auch wenn nicht dokumentiert), kann es verwendet werden - mit entsprechender Kennzeichnung.
 
-Bevorzuge dokumentierte Lösungen, aber wenn etwas funktioniert (auch wenn nicht dokumentiert), kann es verwendet werden - mit entsprechender Kennzeichnung.
-
-## Nutzung
-
-Bei jeder Ninox-Anfrage:
-
-1. **OBLIGATORISCH**: Zuerst Prüfung der Function-Whitelist - bevorzuge dokumentierte Funktionen
-2. Prüfung der "undocumented-features.md" - wenn undokumentiert aber funktionierend, mit Kennzeichnung verwenden
-3. Automatische Suche in der Knowledge Base
-4. Verweis auf relevante Dokumentationsstellen (mit URL) für dokumentierte Features
-5. Anwendung der Regeln (strict-rules.md)
-6. Prüfung gegen "forbidden-patterns.md" - keine erfundenen Funktionen/Syntax
-7. Nutzung von Beispielen als Referenz
-8. **Bei undokumentierten Features**: Explizit kennzeichnen mit Kommentar wie "⚠️ Nicht in offizieller Dokumentation, aber funktioniert"
-
-## Validierungsprozess
+## 🔍 Validierungsprozess
 
 Jedes generierte Ninox-Skript muss:
 
-1. Bevorzugt Funktionen aus der Whitelist verwenden (dokumentiert)
-2. Undokumentierte aber funktionierende Features aus "undocumented-features.md" mit entsprechender Kennzeichnung verwenden
-3. Keine Patterns aus "forbidden-patterns.md" enthalten (erfundene Funktionen)
-4. Quellenangaben zu forum.ninox.de für dokumentierte Features enthalten
-5. Bei undokumentierten Features explizit kennzeichnen: "⚠️ Nicht in offizieller Dokumentation, aber funktioniert"
+1. Bevorzugt Funktionen aus der Whitelist verwenden (`rules/function-whitelist.md`)
+2. Keine Patterns aus `rules/forbidden-patterns.md` enthalten
+3. Quellenangaben zu forum.ninox.de für dokumentierte Features enthalten
+4. Undokumentierte Features explizit kennzeichnen: `⚠️ Nicht in offizieller Dokumentation, aber funktioniert`
 
-## Erweiterung
-
-Die Knowledge Base kann kontinuierlich erweitert werden:
-- Wenn neue Dokumentation verfügbar ist
-- Wenn du weitere Beispiele hinzufügst
-- Wenn neue undokumentierte aber funktionierende Features entdeckt werden
-
-## Quellen
+## 📖 Quellen
 
 - Offizielle Dokumentation: https://forum.ninox.de/category/docs
 - Ninox Tutorials: https://ninox.com/de/tutorials
 - Community Forum: https://forum.ninox.de
+
+## ⚖️ Lizenz
+
+Creative Commons Attribution 4.0 International (CC-BY 4.0) - siehe [LICENSE](LICENSE) für Details.
+
+**Hinweis**: Ninox ist eine Marke von Ninox Software GmbH. Diese Knowledge Base ist nicht offiziell von Ninox unterstützt.
+
+## ⚠️ Disclaimer
+
+- Diese Knowledge Base ist **nicht** die offizielle Ninox-Dokumentation
+- Undokumentierte Features können sich ändern oder entfernt werden
+- Immer die offizielle Dokumentation bevorzugen
