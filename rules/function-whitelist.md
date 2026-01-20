@@ -67,6 +67,7 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 ### Datensatz-Funktionen
 - `first(collection)` - Ersten Datensatz
 - `last(collection)` - Letzten Datensatz
+- `item(collection, index)` - Element an Index-Position
 
 **Quelle**: Ninox Dokumentation
 
@@ -82,6 +83,11 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 - `upper(text)` - Großbuchstaben
 - `lower(text)` - Kleinbuchstaben
 - `trim(text)` - Leerzeichen entfernen (falls dokumentiert)
+- `split(text, delimiter)` - Text an Trennzeichen aufteilen
+- `substr(text, start, length)` - Teilstring extrahieren
+- `index(text, search)` - Position eines Textes finden
+- `replace(text, search, replacement)` - Text ersetzen
+- `join(collection, separator)` - Sammlung mit Trennzeichen verbinden
 
 **Quelle**: Ninox Dokumentation - Funktionen
 
@@ -100,6 +106,7 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 - `weekday(date)` - Wochentag
 - `week(date)` - Kalenderwoche
 - `quarter(date)` - Quartal
+- `format(date/datetime, formatString)` - Datum/Zeit formatieren
 
 **Quelle**: Ninox Dokumentation - Funktionen
 
@@ -108,11 +115,13 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 ## Mathematische Funktionen
 
 - `abs(number)` - Absolutwert
-- `round(number)` - Runden
+- `round(number, decimals)` - Runden (mit optionalen Dezimalstellen)
 - `floor(number)` - Abrunden
 - `ceil(number)` - Aufrunden
 - `sqrt(number)` - Quadratwurzel
 - `pow(base, exponent)` - Potenz
+- `max(value1, value2, ...)` - Maximum
+- `min(value1, value2, ...)` - Minimum
 
 **Quelle**: Ninox Dokumentation - Funktionen
 
@@ -151,6 +160,7 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 
 ### Funktion definieren
 - `function name(params) do ... end` - Eigene Funktion erstellen
+- `function name(params: type): returnType do ... end` - Mit Typen
 
 **Parameter-Typen**:
 - `text`
@@ -159,15 +169,28 @@ Diese Liste enthält alle **dokumentierten** Ninox-Funktionen, die sicher verwen
 - `date`
 - `time`
 - `datetime`
-- Tabellen-Typen
+- Tabellen-Typen (z.B. `'Tabelle'`)
 
 **Quelle**: https://forum.ninox.com/t/x2yz1t2/create-your-own-functions
+
+## Weitere Funktionen
+
+- `unique(collection)` - Duplikate entfernen
+- `array(...)` - Array erstellen
+- `text(value)` - Wert in Text konvertieren
+- `number(value)` - Wert in Zahl konvertieren
+- `boolean(value)` - Wert in Boolean konvertieren
+
+**Quelle**: Ninox Dokumentation
 
 ---
 
 ## HTTP-Operationen
 
-- `http(url, options)` - HTTP-Request ausführen
+- `http(method, url, headers, body)` - HTTP-Request ausführen
+  - Method: "GET", "POST", "PUT", "DELETE"
+  - Headers: Objekt mit Header-Key-Value-Paaren
+  - Body: Request-Body (bei POST/PUT)
 
 **Quelle**: Ninox API-Dokumentation
 
