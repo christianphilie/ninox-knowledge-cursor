@@ -40,6 +40,14 @@ Bei JEDER Ninox-Anfrage:
 - Style Guide: `rules/style-guide.md`
 - Common Mistakes: `rules/common-mistakes.md`
 
+## DATEI-ORGANISATION
+
+### Neue Dateien anlegen
+- **ALLE neuen Dateien** (Skripte, Beispiele, Dokumentation) müssen im Ordner `workspace/` angelegt werden
+- NIEMALS Dateien direkt in `examples/`, `docs/` oder anderen Ordnern erstellen
+- Der `workspace/` Ordner ist der Arbeitsbereich für neue Inhalte
+- Bestehende Dateien in anderen Ordnern sind Referenzmaterial und sollten nicht verändert werden
+
 ## WICHTIG
 
 Ninox-Skript ist sehr eingeschränkt. Viele Funktionen aus anderen Programmiersprachen existieren NICHT. Erfinde NICHTS. Verwende NUR dokumentierte Funktionen oder kennzeichne undokumentierte Features entsprechend.
