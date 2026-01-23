@@ -24,10 +24,24 @@ Bei JEDER Ninox-Anfrage:
 2. Prüfe `rules/undocumented-features.md` - wenn verwendet, kennzeichnen
 3. Prüfe `rules/forbidden-patterns.md` - keine erfundenen Funktionen
 4. Prüfe `rules/performance-rules.md` - Performance-Optimierungen beachten
-5. Füge Quellenangaben zu forum.ninox.de für dokumentierte Features hinzu
+5. Prüfe `rules/relations-and-loops.md` - korrekte Verwendung von Relationen und for-Schleifen
+6. Prüfe `rules/common-mistakes.md` - häufige Fehler vermeiden
+7. Prüfe `rules/context-queries.md` - wann nachfragen statt raten
+8. Füge Quellenangaben zu forum.ninox.de für dokumentierte Features hinzu
 
-### 4. Bei Unsicherheit
+### 4. Kontext-Abfragen - KRITISCH
+**WICHTIG**: Bevor du Code generierst, prüfe ob alle Informationen klar sind:
+- **Feldnamen**: Wenn nicht eindeutig → NACHFRAGEN (z.B. "Pos" vs "Pos Nr", "Einheit" vs "Mengeneinheit")
+- **Tabellennamen**: Wenn nicht eindeutig → NACHFRAGEN
+- **Relationen**: Wenn Kontext unklar → NACHFRAGEN
+- **Funktionalität**: Wenn mehrdeutig → NACHFRAGEN
+- **Datenbankstruktur**: Wenn nicht klar → NACHFRAGEN
+
+**Regel**: Lieber nachfragen als falsch raten! Siehe `rules/context-queries.md` für Details.
+
+### 5. Bei Unsicherheit
 - Wenn eine Funktion nicht in der Whitelist steht: Als "nicht bestätigt" markieren
+- Wenn Feldnamen/Tabellennamen unklar sind: NACHFRAGEN statt raten
 - Immer dokumentierte Alternative verwenden, wenn verfügbar
 - NIEMALS etwas erfinden oder aus anderen Sprachen übernehmen
 
@@ -39,6 +53,8 @@ Bei JEDER Ninox-Anfrage:
 - Performance-Regeln: `rules/performance-rules.md`
 - Style Guide: `rules/style-guide.md`
 - Common Mistakes: `rules/common-mistakes.md`
+- Relationen und for-Schleifen: `rules/relations-and-loops.md`
+- Kontext-Abfragen: `rules/context-queries.md` ⚠️ WICHTIG: Wann nachfragen statt raten
 
 ## DATEI-ORGANISATION
 

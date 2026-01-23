@@ -218,12 +218,82 @@ end
 
 ---
 
+## Fehler 11: Where-Klausel in for-Schleife mit Relationen
+
+### ❌ FALSCH
+```ninox
+// Funktioniert NICHT: where-Klausel kann nicht direkt in for-Schleife verwendet werden
+for i in select 'Rechnung Positionen' where Rechnungen = myID order by Pos do
+  // Code
+end
+```
+
+### ✅ RICHTIG
+```ninox
+// Bei Relationen direkt über die Relation iterieren
+// 'Rechnung Positionen' ist bereits gefiltert durch den Kontext (this)
+for i in 'Rechnung Positionen' do
+  // Code
+end
+
+// Oder: Erst select, dann iterieren
+let positions := select 'Rechnung Positionen' where Rechnungen = myID order by Pos;
+for i in positions do
+  // Code
+end
+```
+
+**Grund**: `for`-Schleifen können nicht direkt mit `select ... where` kombiniert werden. Bei Relationen (wie `'Rechnung Positionen'`) wird direkt über die Relation iteriert, die bereits durch den Kontext gefiltert ist.
+
+**Wichtig**: 
+- Relationen sind bereits kontextbezogen gefiltert (z.B. `this.'Rechnung Positionen'` zeigt nur Positionen der aktuellen Rechnung)
+- Bei `select`-Statements muss die Filterung explizit erfolgen
+- `order by` kann nur in `select`-Statements verwendet werden, nicht direkt in `for`-Schleifen
+
+---
+
+## Fehler 12: Falsche Feldnamen durch Annahmen
+
+### ❌ FALSCH
+```ninox
+// Annahme: Feld heißt "Pos", aber tatsächlich heißt es "Pos Nr"
+for i in 'Rechnung Positionen' do
+  newPos.Pos := i.Pos; // Funktioniert nicht!
+end
+
+// Annahme: Feld heißt "Mengeneinheit", aber tatsächlich heißt es "Einheit"
+newPos.Mengeneinheit := i.Mengeneinheit; // Funktioniert nicht!
+```
+
+### ✅ RICHTIG
+```ninox
+// Erst nachfragen oder prüfen, wie die Felder genau heißen
+// Dann korrekte Feldnamen verwenden
+for i in 'Rechnung Positionen' do
+  newPos.'Pos Nr' := i.'Pos Nr'; // Korrekter Feldname
+  newPos.Einheit := i.Einheit; // Korrekter Feldname
+end
+```
+
+**Grund**: Feldnamen können verschiedene Varianten haben. Häufige Varianten:
+- Positionsnummern: `Pos`, `Pos Nr`, `Position`, `PosNr`
+- Einheiten: `Einheit`, `Mengeneinheit`, `Mengeneinheit_alt`, `Unit`
+- Datumsfelder: `Datum`, `Erstellungsdatum`, `'Datum Rechnung'`, `'Abrechnungsdatum von'`
+
+**Wichtig**: Wenn Feldnamen nicht eindeutig sind, IMMER nachfragen statt raten! Siehe `rules/context-queries.md`
+
+---
+
 ## Checkliste zur Fehlervermeidung
 
 Vor jedem Skript prüfen:
 
+- [ ] **Feldnamen klar?** Wenn nicht eindeutig → NACHFRAGEN (siehe `rules/context-queries.md`)
+- [ ] **Tabellennamen klar?** Wenn nicht eindeutig → NACHFRAGEN
+- [ ] **Relationen klar?** Wenn Kontext unklar → NACHFRAGEN
 - [ ] Verwende `select ... where` statt nachträglicher Filterung
 - [ ] Vermeide `select` in Schleifen
+- [ ] Bei Relationen: Iteriere direkt über die Relation, nicht mit `select ... where` in der for-Schleife
 - [ ] Verwende `do as transaction` bei mehreren Schreiboperationen
 - [ ] Verwende Aggregatfunktionen statt Loops
 - [ ] Verwende nur dokumentierte Funktionen
@@ -238,3 +308,4 @@ Vor jedem Skript prüfen:
 - Offizielle Dokumentation: https://forum.ninox.de/category/docs
 - Performance-Regeln: `rules/performance-rules.md`
 - Forbidden Patterns: `rules/forbidden-patterns.md`
+- Kontext-Abfragen: `rules/context-queries.md` - Wann nachfragen statt raten

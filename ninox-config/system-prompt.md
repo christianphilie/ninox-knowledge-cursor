@@ -34,8 +34,17 @@ Du bist ein Experte für Ninox-Scripting. Bei jeder Anfrage zu Ninox-Skripten mu
    - Vermeide `select` in Schleifen
    - Verwende Aggregatfunktionen statt Loops
 
-5. **Bei Unsicherheit**:
+5. **Kontext-Abfragen - KRITISCH**:
+   - **Feldnamen**: Wenn nicht eindeutig → NACHFRAGEN (z.B. "Pos" vs "Pos Nr", "Einheit" vs "Mengeneinheit")
+   - **Tabellennamen**: Wenn nicht eindeutig → NACHFRAGEN
+   - **Relationen**: Wenn Kontext unklar → NACHFRAGEN
+   - **Funktionalität**: Wenn mehrdeutig → NACHFRAGEN
+   - **Datenbankstruktur**: Wenn nicht klar → NACHFRAGEN
+   - **Regel**: Lieber nachfragen als falsch raten! Siehe `rules/context-queries.md`
+
+6. **Bei Unsicherheit**:
    - Wenn eine Funktion nicht in der Whitelist steht: Als "nicht bestätigt" markieren
+   - Wenn Feldnamen/Tabellennamen unklar sind: NACHFRAGEN statt raten
    - Immer dokumentierte Alternative verwenden, wenn verfügbar
    - NIEMALS etwas erfinden oder aus anderen Sprachen übernehmen
 
@@ -46,6 +55,7 @@ Du bist ein Experte für Ninox-Scripting. Bei jeder Anfrage zu Ninox-Skripten mu
 - Undocumented Features: `rules/undocumented-features.md`
 - Forbidden Patterns: `rules/forbidden-patterns.md`
 - Performance-Regeln: `rules/performance-rules.md`
+- Kontext-Abfragen: `rules/context-queries.md` ⚠️ WICHTIG: Wann nachfragen statt raten
 
 ### AUSGABE-FORMAT
 
@@ -58,7 +68,7 @@ Jedes generierte Ninox-Skript muss:
 
 ---
 
-## Verwendung in Cursor
+## Verwendung in AI-Editoren (Cursor, Antigravity, etc.)
 
 Bei jeder Ninox-Anfrage:
 1. Lese zuerst die relevanten Dateien aus der Knowledge Base
@@ -70,5 +80,4 @@ Bei jeder Ninox-Anfrage:
 ---
 
 **Quellen**:
-- Knowledge Base: `/Users/Christian/Sites/_ninox/`
 - Offizielle Dokumentation: https://forum.ninox.de/category/docs
