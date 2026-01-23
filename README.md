@@ -1,43 +1,64 @@
-# Ninox Knowledge Base für Cursor
+# Ninox AI Knowledge Base
 
-Knowledge Base für **[Cursor](https://cursor.sh)**, die mittels RAG sicherstellt, dass mit Cursor generierte **[Ninox](https://ninox.com)**-Skripte nur dokumentierte Funktionen verwenden und keine erfundenen Features enthalten.
+Eine universelle Knowledge Base für KI-Codierungs-Assistenten (**[Cursor](https://cursor.sh)**, **Google Antigravity**, etc.), die mittels RAG sicherstellt, dass generierte **[Ninox](https://ninox.com)**-Skripte nur dokumentierte Funktionen verwenden.
 
-**Problem**: LLMs erfinden oft Funktionen oder übernehmen Syntax aus anderen Sprachen.  
-**Lösung**: Diese Knowledge Base nutzt **RAG (Retrieval-Augmented Generation)** - Regeln werden als Kontext eingebunden, nicht ins Modell trainiert. Sofort einsatzbereit, aktualisierbar, transparent.
+**Problem**: KI-Modelle erfinden oft Funktionen oder übernehmen Syntax aus anderen Sprachen (wie JavaScript-Array-Methoden), die Ninox nicht unterstützt.
+**Lösung**: Diese Knowledge Base nutzt **RAG (Retrieval-Augmented Generation)**. Die Regeln werden als Kontext eingebunden, sodass die KI genau weiß, was in Ninox erlaubt ist und was nicht.
+
+---
 
 ## 🚀 Schnellstart
 
-1. **Ordner in Cursor öffnen** → `.cursor/rules/*.mdc` werden automatisch geladen
-2. **Skripte im `workspace/` erstellen** → Cursor nutzt automatisch die Knowledge Base
-3. **Fertig** → Stelle Cursor Fragen zu Ninox, Cursor folgt den Regeln
+1.  **Repository klonen** oder herunterladen.
+2.  **In Cursor oder Google Antigravity öffnen**: Die Regeln in `.cursor/rules/` bzw. Skills in `.agent/skills/` werden automatisch erkannt.
+3.  **Skripte erstellen**: Erstelle deine `.nx` Dateien im Ordner `workspace/`.
 
-## 📁 Struktur
+---
 
-- `rules/` - Regeln (Function-Whitelist, Forbidden Patterns, Performance)
-- `.cursor/rules/*.mdc` - Cursor Project Rules (automatisch geladen)
-- `docs/` - Dokumentation (Scripting, Datenbanken, Automatisierung)
-- `examples/` - Beispiele und Patterns
-- `workspace/` - Hier erstellst du deine Ninox-Skripte
+## 📖 Detaillierte Einrichtungsanleitung
 
-## 🔍 Regeln
+### 1. Installation
+Klone das Repository in einen lokalen Ordner deiner Wahl:
+```bash
+git clone https://github.com/christianphilie/ninox-knowledge-ai.git
+cd ninox-knowledge-ai
+```
 
-Jedes generierte Ninox-Skript muss:
+### 2. Konfiguration für verschiedene Tools
 
-1. Funktionen aus der Whitelist verwenden (`rules/function-whitelist.md`)
-2. Keine Patterns aus `rules/forbidden-patterns.md` enthalten
-3. Quellenangaben zu forum.ninox.de enthalten
-4. Undokumentierte Features so kennzeichnen: `⚠️ Nicht in offizieller Dokumentation, aber funktioniert`
+#### Für Cursor (Auto-Loading)
+Cursor liest automatisch alle `.mdc` Dateien im Ordner `.cursor/rules/`. Sobald du den Projektordner in Cursor öffnest, sind die "Leitplanken" aktiv. Du musst nichts weiter tun.
 
-**Prinzip**: Dokumentierte Funktionen bevorzugen. Undokumentierte aber funktionierende Features können verwendet werden - mit Kennzeichnung.
+#### Für Google Antigravity
+Antigravity erkennt den `.agent/`-Ordner. Die Datei `.agent/skills/ninox-scripting/SKILL.md` definiert die Fähigkeiten und verweist auf die Regeldateien im Projekt. Auch hier erfolgt die Erkennung automatisch beim Öffnen des Folders.
 
-## 📖 Quellen
+#### Für ChatGPT (Custom GPT)
+In dem Ordner `.custom-gpt/` findest du Anleitungen und Texte, um dir ein eigenes "Ninox GPT" in ChatGPT zu erstellen. Lade dazu die Markdown-Dateien aus `rules/` als Knowledge-Dateien in dein Custom GPT hoch.
 
-- Offizielle Dokumentation: https://forum.ninox.de/category/docs
-- Ninox Tutorials: https://ninox.com/de/tutorials
-- Community Forum: https://forum.ninox.de
+---
+
+## 📁 Projekt-Struktur
+
+- `rules/` - Die Kern-Regeln (Whitelist, Verbotene Patterns, Performance)
+- `.cursor/rules/` - Spezielle Konfiguration für den Cursor Editor
+- `.agent/` - Spezielle Konfiguration für Google Antigravity (Skills & Workflows)
+- `.custom-gpt/` - Anleitungen und Texte für ChatGPT (Custom GPT)
+- `docs/` - Tiefergehende Dokumentation zu Scripting und Automatisierung
+- `examples/` - Best-Practice Beispiele für Ninox-Skripte
+- `workspace/` - Dein Arbeitsbereich für neue Skripte
+
+---
+
+## 🔍 Die Goldenen Regeln
+
+Jedes von der KI generierte Ninox-Skript muss:
+1.  Nur Funktionen aus der `rules/function-whitelist.md` verwenden.
+2.  Keine Muster aus `rules/forbidden-patterns.md` enthalten (z.B. kein `.map()`).
+3.  Saubere Syntax gemäß `rules/style-guide.md` einhalten.
+
+---
 
 ## ⚖️ Lizenz
+Creative Commons Attribution 4.0 International (CC-BY 4.0).
+Ninox ist eine Marke der Ninox Software GmbH. Diese Knowledge Base ist ein Community-Projekt.
 
-Creative Commons Attribution 4.0 International (CC-BY 4.0) - siehe [LICENSE](LICENSE).
-
-**Hinweis**: Ninox ist eine Marke von Ninox Software GmbH. Diese Knowledge Base ist nicht offiziell von Ninox unterstützt.
