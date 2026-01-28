@@ -19,15 +19,18 @@ Relationen sind verknüpfte Tabellen in Ninox. Wenn eine Tabelle `Rechnungen` ei
 ### ✅ RICHTIG: Direkte Iteration über Relationen
 
 ```ninox
-// Relation ist bereits kontextbezogen gefiltert
+"Relation ist bereits kontextbezogen gefiltert";
+"WICHTIG: this in Variable speichern, um Kontext-Probleme zu vermeiden";
 let my := this;
 for i in 'Rechnung Positionen' do
-  // 'Rechnung Positionen' zeigt automatisch nur Positionen von 'my'
-  // Code
+  "'Rechnung Positionen' zeigt automatisch nur Positionen von 'my'";
+  "Code";
 end
 ```
 
-**Grund**: Relationen sind bereits durch den Kontext gefiltert. Wenn du `this.'Rechnung Positionen'` verwendest, zeigt es nur die Positionen der aktuellen Rechnung.
+**Grund**: 
+- Relationen sind bereits durch den Kontext gefiltert. Wenn du `my.'Rechnung Positionen'` verwendest, zeigt es nur die Positionen der aktuellen Rechnung.
+- **Wichtig**: `let my := this;` speichert den Kontext zuverlässig und vermeidet Probleme mit `this` in Schleifen oder komplexeren Operationen. Siehe auch `rules/common-mistakes.md` - Fehler 13.
 
 ---
 
@@ -36,10 +39,10 @@ end
 ### ✅ RICHTIG: Select vor der Schleife
 
 ```ninox
-// Erst select, dann iterieren
+"Erst select, dann iterieren";
 let positions := select 'Rechnung Positionen' where Rechnungen = myID order by Pos;
 for i in positions do
-  // Code
+  "Code";
 end
 ```
 
@@ -50,9 +53,9 @@ end
 ## ❌ FALSCH: Where-Klausel direkt in for-Schleife
 
 ```ninox
-// Funktioniert NICHT in Ninox
+"Funktioniert NICHT in Ninox";
 for i in select 'Rechnung Positionen' where Rechnungen = myID order by Pos do
-  // Code
+  "Code";
 end
 ```
 
@@ -71,7 +74,7 @@ end
 ```ninox
 let my := this;
 for position in 'Rechnung Positionen' do
-  // Verarbeitung aller Positionen dieser Rechnung
+  "Verarbeitung aller Positionen dieser Rechnung";
 end
 ```
 
@@ -87,10 +90,10 @@ end
 
 **Beispiel**:
 ```ninox
-// Alle Positionen einer bestimmten Rechnung, sortiert
+"Alle Positionen einer bestimmten Rechnung, sortiert";
 let positions := select 'Rechnung Positionen' where Rechnungen = myID order by 'Pos Nr';
 for i in positions do
-  // Verarbeitung
+  "Verarbeitung";
 end
 ```
 
@@ -100,13 +103,13 @@ end
 
 ### Fehler 1: Where in for-Schleife
 ```ninox
-// ❌ FALSCH
+"❌ FALSCH";
 for i in select Table where Condition do
 end
 ```
 
 ```ninox
-// ✅ RICHTIG
+"✅ RICHTIG";
 let filtered := select Table where Condition;
 for i in filtered do
 end
@@ -114,13 +117,13 @@ end
 
 ### Fehler 2: Relation mit where kombinieren
 ```ninox
-// ❌ FALSCH - Relationen haben keinen where-Parameter
+"❌ FALSCH - Relationen haben keinen where-Parameter";
 for i in 'Rechnung Positionen' where Bedingung do
 end
 ```
 
 ```ninox
-// ✅ RICHTIG - Erst select mit where, dann iterieren
+"✅ RICHTIG - Erst select mit where, dann iterieren";
 let filtered := select 'Rechnung Positionen' where Bedingung;
 for i in filtered do
 end

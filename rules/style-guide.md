@@ -28,18 +28,49 @@ Verwende Leerzeilen zur Gruppierung logisch zusammengehöriger Code-Blöcke.
 
 ### Beispiele
 ```ninox
-// ✅ GUT
+"✅ GUT";
 let customerName := "Max Mustermann";
 let orderTotal := sum(select Orders[Amount]);
 
-// ❌ SCHLECHT
+"❌ SCHLECHT";
 let x := "Max Mustermann";
 let t := sum(select Orders[Amount]);
 ```
 
+### this-Kontext: Immer in Variable speichern
+**WICHTIG**: Um this-Kontext-Probleme zu vermeiden, speichere `this` zu Beginn in einer Variable:
+
+```ninox
+"Best Practice: this in Variable speichern";
+let my := this;
+"Danach überall 'my' statt 'this' verwenden";
+for item in my.Relation do
+  "Verarbeitung";
+end
+```
+
+**Grund**: `this` kann in bestimmten Kontexten (Schleifen, verschachtelte Funktionen) Probleme verursachen. `let my := this;` speichert den Kontext zuverlässig.
+
+Siehe auch: `rules/common-mistakes.md` - Fehler 13
+
 ---
 
 ## Kommentare
+
+### WICHTIG: Kommentar-Syntax in Ninox
+
+**In Ninox funktionieren Kommentare NICHT mit `//` oder `/* */`!**
+
+Kommentare werden als String-Statements geschrieben:
+
+```ninox
+let code := 1;
+"Dies ist ein Kommentar!";
+let mehrCode := 2;
+"Mehrzeilige Kommentare";
+"müssen als separate";
+"String-Statements geschrieben werden";
+```
 
 ### Wann kommentieren
 - Komplexe Logik erklären
@@ -48,15 +79,22 @@ let t := sum(select Orders[Amount]);
 
 ### Format
 ```ninox
-// Einzeiliger Kommentar
+"Einzeiliger Kommentar";
 
-/*
- Mehrzeiliger Kommentar
- für komplexere Erklärungen
- */
+"Mehrzeilige Kommentare";
+"müssen als separate";
+"String-Statements geschrieben werden";
 
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let records := select Table[Condition];
+```
+
+### Beispiel
+```ninox
+let my := this;
+"Berechnet den Bestand aus Lagerbuchungen";
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert: Relation[Filter]";
+first(my.Produkt.Lagerbuchungen[Lager = my.'von Quell-Lager']).'Bestand in Basiseinheit in diesem Lager'
 ```
 
 ---
@@ -70,7 +108,7 @@ let records := select Table[Condition];
 
 ### Beispiel
 ```ninox
-// Berechnet den Gesamtpreis inklusive Steuer
+"Berechnet den Gesamtpreis inklusive Steuer";
 function calculateTotal(amount, taxRate) do
   amount + (amount * taxRate)
 end
@@ -85,9 +123,9 @@ Validiere Eingaben bevor du sie verwendest.
 
 ```ninox
 if amount > 0 then
-  // Verarbeitung
+  "Verarbeitung";
 else
-  // Fehlerbehandlung
+  "Fehlerbehandlung";
 end
 ```
 
@@ -120,24 +158,24 @@ Siehe auch: `rules/strict-rules.md`
 
 ### Guter Code-Stil
 ```ninox
-// Berechnet Gesamtsumme aller offenen Bestellungen
+"Berechnet Gesamtsumme aller offenen Bestellungen";
 function calculateOpenOrdersTotal() do
   let openOrders := select Orders where Status = "Open";
   sum(openOrders[Amount])
 end
 
-// Hauptlogik
+"Hauptlogik";
 do as transaction
   let total := calculateOpenOrdersTotal();
   if total > 1000 then
-    // Verarbeitung
+    "Verarbeitung";
   end
 end
 ```
 
 ### Schlechter Code-Stil
 ```ninox
-// Keine Kommentare, schlechte Namen, keine Performance-Optimierung
+"Keine Kommentare, schlechte Namen, keine Performance-Optimierung";
 let o := select Orders;
 let t := 0;
 for x in o do

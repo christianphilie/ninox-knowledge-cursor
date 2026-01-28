@@ -29,7 +29,7 @@ let openOrders := select Orders where Status = "Open";
 ```ninox
 for customer in select Customers do
   let orders := select Orders where Customer = customer;
-  // Verarbeitung
+  "Verarbeitung";
 end
 ```
 
@@ -38,7 +38,7 @@ end
 let allOrders := select Orders;
 for customer in select Customers do
   let orders := allOrders[Customer = customer];
-  // Verarbeitung
+  "Verarbeitung";
 end
 ```
 
@@ -91,7 +91,7 @@ let total := sum(select Orders[Amount]);
 
 ### ❌ FALSCH
 ```ninox
-// Diese Funktionen existieren NICHT in Ninox
+"Diese Funktionen existieren NICHT in Ninox";
 let filtered := orders.filter(o => o.Status = "Open");
 let mapped := orders.map(o => o.Amount);
 let joined := array.join(orders, ",");
@@ -99,7 +99,7 @@ let joined := array.join(orders, ",");
 
 ### ✅ RICHTIG
 ```ninox
-// Verwende dokumentierte Funktionen
+"Verwende dokumentierte Funktionen";
 let filtered := select Orders where Status = "Open";
 let amounts := filtered[Amount];
 let joined := concat(amounts);
@@ -113,21 +113,21 @@ let joined := concat(amounts);
 
 ### ❌ FALSCH
 ```ninox
-// JavaScript-Syntax - funktioniert NICHT
+"JavaScript-Syntax - funktioniert NICHT";
 for (let i = 0; i < length; i++) {
-  // Code
+  "Code";
 }
 
-// Python-Syntax - funktioniert NICHT
+"Python-Syntax - funktioniert NICHT";
 for item in array:
-  // Code
+  "Code";
 ```
 
 ### ✅ RICHTIG
 ```ninox
-// Ninox-Syntax
+"Ninox-Syntax";
 for item in collection do
-  // Code
+  "Code";
 end
 ```
 
@@ -139,13 +139,13 @@ end
 
 ### ❌ FALSCH
 ```ninox
-// Undokumentiertes Feature ohne Kennzeichnung
+"Undokumentiertes Feature ohne Kennzeichnung";
 let records := select Table[Condition];
 ```
 
 ### ✅ RICHTIG
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let records := select Table[Condition];
 ```
 
@@ -157,7 +157,8 @@ let records := select Table[Condition];
 
 ### ❌ FALSCH
 ```ninox
-let result := amount / divisor; // Kann Division durch Null verursachen
+let result := amount / divisor;
+"Kann Division durch Null verursachen";
 ```
 
 ### ✅ RICHTIG
@@ -165,7 +166,7 @@ let result := amount / divisor; // Kann Division durch Null verursachen
 if divisor != 0 then
   let result := amount / divisor;
 else
-  // Fehlerbehandlung
+  "Fehlerbehandlung";
 end
 ```
 
@@ -222,24 +223,24 @@ end
 
 ### ❌ FALSCH
 ```ninox
-// Funktioniert NICHT: where-Klausel kann nicht direkt in for-Schleife verwendet werden
+"Funktioniert NICHT: where-Klausel kann nicht direkt in for-Schleife verwendet werden";
 for i in select 'Rechnung Positionen' where Rechnungen = myID order by Pos do
-  // Code
+  "Code";
 end
 ```
 
 ### ✅ RICHTIG
 ```ninox
-// Bei Relationen direkt über die Relation iterieren
-// 'Rechnung Positionen' ist bereits gefiltert durch den Kontext (this)
+"Bei Relationen direkt über die Relation iterieren";
+"'Rechnung Positionen' ist bereits gefiltert durch den Kontext (this)";
 for i in 'Rechnung Positionen' do
-  // Code
+  "Code";
 end
 
-// Oder: Erst select, dann iterieren
+"Oder: Erst select, dann iterieren";
 let positions := select 'Rechnung Positionen' where Rechnungen = myID order by Pos;
 for i in positions do
-  // Code
+  "Code";
 end
 ```
 
@@ -256,22 +257,26 @@ end
 
 ### ❌ FALSCH
 ```ninox
-// Annahme: Feld heißt "Pos", aber tatsächlich heißt es "Pos Nr"
+"Annahme: Feld heißt 'Pos', aber tatsächlich heißt es 'Pos Nr'";
 for i in 'Rechnung Positionen' do
-  newPos.Pos := i.Pos; // Funktioniert nicht!
+  newPos.Pos := i.Pos;
+  "Funktioniert nicht!";
 end
 
-// Annahme: Feld heißt "Mengeneinheit", aber tatsächlich heißt es "Einheit"
-newPos.Mengeneinheit := i.Mengeneinheit; // Funktioniert nicht!
+"Annahme: Feld heißt 'Mengeneinheit', aber tatsächlich heißt es 'Einheit'";
+newPos.Mengeneinheit := i.Mengeneinheit;
+"Funktioniert nicht!";
 ```
 
 ### ✅ RICHTIG
 ```ninox
-// Erst nachfragen oder prüfen, wie die Felder genau heißen
-// Dann korrekte Feldnamen verwenden
+"Erst nachfragen oder prüfen, wie die Felder genau heißen";
+"Dann korrekte Feldnamen verwenden";
 for i in 'Rechnung Positionen' do
-  newPos.'Pos Nr' := i.'Pos Nr'; // Korrekter Feldname
-  newPos.Einheit := i.Einheit; // Korrekter Feldname
+  newPos.'Pos Nr' := i.'Pos Nr';
+  "Korrekter Feldname";
+  newPos.Einheit := i.Einheit;
+  "Korrekter Feldname";
 end
 ```
 
@@ -281,6 +286,50 @@ end
 - Datumsfelder: `Datum`, `Erstellungsdatum`, `'Datum Rechnung'`, `'Abrechnungsdatum von'`
 
 **Wichtig**: Wenn Feldnamen nicht eindeutig sind, IMMER nachfragen statt raten! Siehe `rules/context-queries.md`
+
+---
+
+## Fehler 13: this-Kontext-Probleme vermeiden
+
+### ❌ PROBLEMATISCH
+```ninox
+"this kann in bestimmten Kontexten Probleme verursachen";
+for buchung in this.Produkt.Lagerbuchungen do
+  if buchung.Lager = this.'von Quell-Lager' then
+    "Verarbeitung";
+  end
+end
+```
+
+**Problem**: `this` kann in bestimmten Kontexten (z.B. in Schleifen, verschachtelten Funktionen, oder bei komplexeren Operationen) den falschen Kontext referenzieren oder unerwartetes Verhalten zeigen.
+
+### ✅ RICHTIG: this in Variable speichern
+```ninox
+"this in Variable speichern, um Kontext-Probleme zu vermeiden";
+let my := this;
+for buchung in my.Produkt.Lagerbuchungen do
+  if buchung.Lager = my.'von Quell-Lager' then
+    "Verarbeitung";
+  end
+end
+```
+
+**Grund**: 
+- `let my := this;` speichert den aktuellen Kontext zuverlässig
+- `my` behält den Kontext auch in verschachtelten Strukturen bei
+- Vermeidet Probleme mit `this` in Schleifen oder komplexeren Operationen
+- Standard-Pattern für zuverlässigen Kontext-Zugriff
+
+**Wann verwenden**:
+- Immer wenn `this` mehrfach verwendet wird
+- In Schleifen, die auf `this` zugreifen
+- Bei verschachtelten Operationen
+- Bei komplexeren Skripten, um Kontext-Probleme zu vermeiden
+
+**Best Practice**: 
+- Zu Beginn des Skripts: `let my := this;`
+- Dann überall `my` statt `this` verwenden
+- Besonders wichtig bei Relationen: `my.Relation` statt `this.Relation`
 
 ---
 
@@ -301,6 +350,7 @@ Vor jedem Skript prüfen:
 - [ ] Validiere Eingaben
 - [ ] Verwende `limit` bei großen Datensätzen
 - [ ] Vermeide verschachtelte Selects
+- [ ] Verwende `let my := this;` zu Beginn, um this-Kontext-Probleme zu vermeiden
 
 ---
 
