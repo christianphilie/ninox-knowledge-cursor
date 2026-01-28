@@ -1,5 +1,7 @@
 ---
-autoAttach: ["**/*.ninox", "workspace/**"]
+description: "Performance-Optimierungen und Best Practices für Ninox-Scripting. Wird angewendet bei Fragen zu Performance, Optimierung, Datenbankabfragen oder bei Arbeit mit Ninox-Dateien."
+globs: ["**/*.ninox", "workspace/**"]
+alwaysApply: false
 ---
 
 # Ninox Performance-Regeln
