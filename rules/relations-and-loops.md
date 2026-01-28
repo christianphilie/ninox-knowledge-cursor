@@ -12,6 +12,12 @@ Dieses Dokument erklärt den korrekten Umgang mit Relationen und for-Schleifen i
 
 Relationen sind verknüpfte Tabellen in Ninox. Wenn eine Tabelle `Rechnungen` eine Relation `'Rechnung Positionen'` hat, dann zeigt diese Relation automatisch nur die Positionen, die zu der aktuellen Rechnung gehören.
 
+**Wichtig**: Beziehungsfelder (Relationen) sind **keine Tabellen** und können nicht direkt in `select`-Statements verwendet werden. Verwende stattdessen den Namen der zugrundeliegenden Tabelle.
+
+**Beispiel**:
+- ❌ FALSCH: `select 'Pos Produkte /Leistungen' where ...` (Beziehungsfeld)
+- ✅ RICHTIG: `select 'Pos Produkte' where ...` (Tabelle)
+
 ---
 
 ## For-Schleifen mit Relationen
@@ -99,6 +105,33 @@ end
 
 ---
 
+## Beziehungsfelder vs. Tabellen in select
+
+### ❌ FALSCH: Beziehungsfeld in select verwenden
+```ninox
+"Beziehungsfeld kann nicht direkt in select verwendet werden";
+let artikelPositionen := select 'Pos Produkte /Leistungen' where Servicebericht = thisServicebericht;
+```
+
+**Problem**: `'Pos Produkte /Leistungen'` ist ein Beziehungsfeld (Relation), keine Tabelle. Beziehungsfelder zeigen nur auf Datensätze in anderen Tabellen und können nicht direkt in `select` verwendet werden.
+
+### ✅ RICHTIG: Tabelle verwenden
+```ninox
+"Verwende die zugrundeliegende Tabelle";
+let artikelPositionen := select 'Pos Produkte' where Servicebericht = thisServicebericht;
+```
+
+**Grund**: 
+- `select` benötigt den Namen der tatsächlichen Tabelle
+- Die Tabelle enthält die Datensätze, das Beziehungsfeld zeigt nur darauf
+- Mit `where` kann dann nach dem verknüpften Datensatz gefiltert werden
+
+**Wann welches verwenden**:
+- **Beziehungsfeld**: Direkt in `for`-Schleifen: `for pos in 'Pos Produkte /Leistungen' do`
+- **Tabelle**: In `select`-Statements: `select 'Pos Produkte' where Servicebericht = ...`
+
+---
+
 ## Häufige Fehler
 
 ### Fehler 1: Where in for-Schleife
@@ -127,6 +160,17 @@ end
 let filtered := select 'Rechnung Positionen' where Bedingung;
 for i in filtered do
 end
+```
+
+### Fehler 3: Beziehungsfeld statt Tabelle in select
+```ninox
+"❌ FALSCH - Beziehungsfeld kann nicht in select verwendet werden";
+let positions := select 'Pos Produkte /Leistungen' where Servicebericht = my;
+```
+
+```ninox
+"✅ RICHTIG - Verwende die Tabelle";
+let positions := select 'Pos Produkte' where Servicebericht = my;
 ```
 
 ---
@@ -160,6 +204,7 @@ end
 | Gefilterte Datensätze | `let filtered := select Table where Condition; for i in filtered do` |
 | Sortierte Datensätze | `let sorted := select Table order by Field; for i in sorted do` |
 | Limitierte Datensätze | `let limited := select Table limit 10; for i in limited do` |
+| **Wichtig**: Beziehungsfeld in select | `select Table where ...` (nicht `select 'Beziehungsfeld'`) |
 
 **Wichtig**: `for ... in select ... where ...` funktioniert **NICHT** in Ninox!
 

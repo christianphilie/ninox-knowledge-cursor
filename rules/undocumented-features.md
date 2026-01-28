@@ -315,6 +315,47 @@ let xml := formatXML(data, true);
 
 ---
 
+### 11. `number(record)` - Record für dynamische Auswahl-Felder konvertieren
+
+**Beschreibung**: Konvertiert einen Record (Datensatz) in einen numerischen Wert, um ihn in dynamischen Auswahl-Feldern zu verwenden.
+
+**Syntax**:
+```ninox
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+number(record)
+```
+
+**Beispiel**:
+```ninox
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+let lagerort := first(select Lagerorte where Warenwirtschaft = warenwirtschaft and Nutzer = mitarbeiterBenutzer);
+let newAbbuchung := (create Lagerbuchungen);
+newAbbuchung.(
+    Lager := number(lagerort);  "Konvertiert Record zu numerischem Wert für dynamisches Auswahl-Feld"
+)
+```
+
+**Problem ohne `number()`**:
+```ninox
+"❌ FALSCH - Fehler: Field must return dynamic values";
+Lager := lagerort;  "Funktioniert nicht bei dynamischen Auswahl-Feldern"
+```
+
+**Erklärung**:
+- Dynamische Auswahl-Felder erwarten eine Collection oder einen numerischen Wert
+- Direktes Setzen eines Record-Objekts führt zu Fehler "Field must return dynamic values"
+- `number(record)` konvertiert den Record in einen numerischen Wert (ID/Nr)
+- Dieser numerische Wert kann dann im dynamischen Auswahl-Feld verwendet werden
+
+**Hinweise**:
+- Funktioniert nur, wenn das dynamische Auswahl-Feld auf der gleichen Tabelle basiert wie der Record
+- Bei Relation-Feldern kann der Record direkt verwendet werden: `RelationFeld := record;`
+- Alternative: Collection mit einem Element: `Lager := select Lagerorte where Nr = lagerort.Nr;`
+
+**Quelle**: Getestet und funktionierend, aber nicht explizit in offizieller Dokumentation gefunden
+
+---
+
 ### Weitere Features
 
 Diese Liste wird kontinuierlich erweitert, wenn neue undokumentierte aber funktionierende Features entdeckt werden.

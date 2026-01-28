@@ -333,6 +333,108 @@ end
 
 ---
 
+## Fehler 14: Beziehungsfelder direkt in select verwenden
+
+### ❌ FALSCH
+```ninox
+"Beziehungsfeld kann nicht direkt in select verwendet werden";
+let artikelPositionen := select 'Pos Produkte /Leistungen' where Servicebericht = thisServicebericht and 'Produktart' = 2;
+```
+
+**Problem**: `'Pos Produkte /Leistungen'` ist ein Beziehungsfeld (Relation), keine Tabelle. Beziehungsfelder können nicht direkt in `select`-Statements verwendet werden.
+
+### ✅ RICHTIG: Tabelle verwenden
+```ninox
+"Verwende die zugrundeliegende Tabelle statt des Beziehungsfelds";
+let artikelPositionen := select 'Pos Produkte' where Servicebericht = thisServicebericht and 'Produktart' = 2;
+```
+
+**Grund**: 
+- Beziehungsfelder sind nur Referenzen auf Datensätze in anderen Tabellen
+- `select` benötigt den Namen der tatsächlichen Tabelle
+- Die Tabelle enthält die Datensätze, das Beziehungsfeld zeigt nur darauf
+
+**Wichtig**: 
+- Beziehungsfelder können direkt in `for`-Schleifen verwendet werden: `for pos in 'Pos Produkte /Leistungen' do`
+- Für `select` mit `where` muss die Tabelle verwendet werden: `select 'Pos Produkte' where ...`
+- Siehe auch `rules/relations-and-loops.md` für Details zu Relationen
+
+---
+
+## Fehler 15: Dynamische Auswahl-Felder mit Record-Objekt setzen
+
+### ❌ FALSCH
+```ninox
+"Fehler: Field must return dynamic values";
+let lagerort := first(select Lagerorte where Warenwirtschaft = warenwirtschaft and Nutzer = mitarbeiterBenutzer);
+newAbbuchung.(
+    Lager := lagerort;  "Funktioniert nicht bei dynamischen Auswahl-Feldern!"
+)
+```
+
+**Problem**: Dynamische Auswahl-Felder erwarten eine Collection oder einen numerischen Wert, nicht direkt ein Record-Objekt. Der Fehler "Field must return dynamic values" tritt auf.
+
+### ✅ RICHTIG: number() verwenden
+```ninox
+"Verwende number() um Record in numerischen Wert zu konvertieren";
+let lagerort := first(select Lagerorte where Warenwirtschaft = warenwirtschaft and Nutzer = mitarbeiterBenutzer);
+newAbbuchung.(
+    Lager := number(lagerort);  "Konvertiert Record zu numerischem Wert"
+)
+```
+
+**Grund**: 
+- Dynamische Auswahl-Felder basieren auf Tabellen-Datensätzen
+- `number(record)` konvertiert den Record in einen numerischen Wert (ID/Nr)
+- Dieser numerische Wert kann dann im dynamischen Auswahl-Feld verwendet werden
+
+**Alternative Lösungen** (falls `number()` nicht funktioniert):
+- Collection mit einem Element: `Lager := select Lagerorte where Nr = lagerort.Nr;`
+- Direktes Select im Zuweisungsblock: `Lager := first(select Lagerorte where ...);`
+
+**Hinweis**: 
+- Funktioniert nur, wenn das dynamische Auswahl-Feld auf der gleichen Tabelle basiert
+- Bei Relation-Feldern kann der Record direkt verwendet werden: `RelationFeld := record;`
+
+---
+
+## Fehler 16: Keine Prüfung gegen doppelte Ausführung
+
+### ❌ FALSCH
+```ninox
+"Operation wird bei jedem Aufruf ausgeführt, auch wenn bereits erledigt";
+"Lagerbuchungen für verwendete Artikel erstellen";
+let warenwirtschaft := first(select Warenwirtschaft);
+"Erstellt Lagerbuchungen, auch wenn bereits vorhanden";
+```
+
+**Problem**: Wenn ein Skript mehrfach ausgeführt wird (z.B. durch erneutes Klicken auf einen Button oder durch Fehlerbehandlung), werden Operationen mehrfach ausgeführt, was zu Duplikaten führt.
+
+### ✅ RICHTIG: Flag-Feld verwenden
+```ninox
+"Prüfung mit Flag-Feld verhindert doppelte Ausführung";
+if not 'Lagerbuchungen für eingesetzte Artikel bereits erstellt' then
+    "Lagerbuchungen für verwendete Artikel erstellen";
+    let warenwirtschaft := first(select Warenwirtschaft);
+    "Erstellt Lagerbuchungen nur einmal";
+    "Am Ende:";
+    'Lagerbuchungen für eingesetzte Artikel bereits erstellt' := true;
+end
+```
+
+**Grund**: 
+- Flag-Feld (Boolean) markiert, ob Operation bereits ausgeführt wurde
+- Prüfung zu Beginn verhindert erneute Ausführung
+- Flag wird am Ende gesetzt, nach erfolgreicher Ausführung
+
+**Best Practices**:
+- Flag-Feld sollte einen aussagekräftigen Namen haben
+- Flag sollte erst am Ende gesetzt werden, nach erfolgreicher Ausführung
+- Bei Fehlern sollte das Flag nicht gesetzt werden, damit Retry möglich ist
+- Alternativ: Prüfung auf bereits existierende Datensätze statt Flag-Feld
+
+---
+
 ## Checkliste zur Fehlervermeidung
 
 Vor jedem Skript prüfen:
@@ -351,6 +453,9 @@ Vor jedem Skript prüfen:
 - [ ] Verwende `limit` bei großen Datensätzen
 - [ ] Vermeide verschachtelte Selects
 - [ ] Verwende `let my := this;` zu Beginn, um this-Kontext-Probleme zu vermeiden
+- [ ] Verwende Tabellennamen statt Beziehungsfelder in `select`-Statements
+- [ ] Verwende `number(record)` für dynamische Auswahl-Felder
+- [ ] Prüfe mit Flag-Feldern gegen doppelte Ausführung von Operationen
 
 ---
 
